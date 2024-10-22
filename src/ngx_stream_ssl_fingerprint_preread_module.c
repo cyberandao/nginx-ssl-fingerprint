@@ -154,7 +154,7 @@ int ngx_stream_ssl_ffi_fingerprint(ngx_stream_lua_request_t *r,
     return NGX_OK;
 }
 
-int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_session_t *s,
+int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_lua_request_t *r,
                 char *data, size_t len, size_t *len_out)
 {
     ngx_connection_t *c;
