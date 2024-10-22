@@ -117,6 +117,66 @@ ngx_stream_ssl_fingerprint_hash(ngx_stream_session_t *s,
     return NGX_OK;
 }
 
+int ngx_stream_ssl_ffi_fingerprint(ngx_stream_session_t *s,
+                char *data, size_t len, size_t *len_out)
+{
+    if (s->connection == NULL)
+    {
+        return NGX_OK;
+    }
+
+    if (s->connection->ssl == NULL)
+    {
+        return NGX_OK;
+    }
+
+    if (ngx_ssl_ja3(s->connection) == NGX_DECLINED)
+    {
+        return NGX_ERROR;
+    }
+
+    if (len <= s->connection->ssl->fp_ja3_str.len)
+    {
+        return NGX_ERROR;
+    }
+
+    ngx_memcpy(data, s->connection->ssl->fp_ja3_str.data, s->connection->ssl->fp_ja3_str.len);
+    data[s->connection->ssl->fp_ja3_str.len] = '\0';
+    *len_out = s->connection->ssl->fp_ja3_str.len;
+
+    return NGX_OK;
+}
+
+int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_session_t *s,
+                char *data, size_t len, size_t *len_out)
+{
+    if (s->connection == NULL)
+    {
+        return NGX_OK;
+    }
+
+    if (s->connection->ssl == NULL)
+    {
+        return NGX_OK;
+    }
+
+    if (ngx_ssl_ja3_hash(s->connection) == NGX_DECLINED)
+    {
+        return NGX_ERROR;
+    }
+
+    if (len <= s->connection->ssl->fp_ja3_hash.len)
+    {
+        return NGX_ERROR;
+    }
+
+    ngx_memcpy(data, s->connection->ssl->fp_ja3_hash.data, s->connection->ssl->fp_ja3_hash.len);
+    data[s->connection->ssl->fp_ja3_hash.len] = '\0';
+    *len_out = s->connection->ssl->fp_ja3_hash.len;
+
+    return NGX_OK;
+}
+
 static ngx_stream_variable_t  ngx_stream_ssl_ja3_variables_list[] = {
 
     {   ngx_string("stream_ssl_greased"),
