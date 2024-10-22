@@ -117,20 +117,27 @@ ngx_stream_ssl_fingerprint_hash(ngx_stream_session_t *s,
     return NGX_OK;
 }
 
-int ngx_stream_ssl_ffi_fingerprint(ngx_stream_session_t *s,
+int ngx_stream_ssl_ffi_fingerprint(ngx_stream_lua_request_t *r,
                 char *data, size_t len, size_t *len_out)
 {
-    if (s->connection == NULL)
+    ngx_connection_t *c;
+
+    c = ngx_stream_lua_ssl_get_connection(r->connection->ssl);
+    if (c == NULL) {
+        c = r->connection;
+    }
+
+    if (c == NULL)
     {
         return NGX_OK;
     }
 
-    if (s->connection->ssl == NULL)
+    if (r->connection->ssl == NULL)
     {
         return NGX_OK;
     }
 
-    if (ngx_ssl_ja3(s->connection) == NGX_DECLINED)
+    if (ngx_ssl_ja3(c) == NGX_DECLINED)
     {
         return NGX_ERROR;
     }
@@ -150,7 +157,14 @@ int ngx_stream_ssl_ffi_fingerprint(ngx_stream_session_t *s,
 int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_session_t *s,
                 char *data, size_t len, size_t *len_out)
 {
-    if (s->connection == NULL)
+    ngx_connection_t *c;
+
+    c = ngx_stream_lua_ssl_get_connection(r->connection->ssl);
+    if (c == NULL) {
+        c = r->connection;
+    }
+
+    if (c == NULL)
     {
         return NGX_OK;
     }
@@ -160,7 +174,7 @@ int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_session_t *s,
         return NGX_OK;
     }
 
-    if (ngx_ssl_ja3_hash(s->connection) == NGX_DECLINED)
+    if (ngx_ssl_ja3_hash(c) == NGX_DECLINED)
     {
         return NGX_ERROR;
     }
