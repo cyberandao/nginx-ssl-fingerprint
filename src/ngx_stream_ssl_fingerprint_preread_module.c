@@ -181,7 +181,7 @@ int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_lua_request_t *r,
         return NGX_ERROR;
     }
 
-    if (len <= s->connection->ssl->fp_ja3_hash.len)
+    if (len <= r->connection->ssl->fp_ja3_hash.len)
     {
         return NGX_ERROR;
     }
