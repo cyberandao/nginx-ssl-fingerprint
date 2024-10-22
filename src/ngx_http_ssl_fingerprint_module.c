@@ -2,6 +2,7 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 #include <ngx_http_lua_api.h>
+#include <ngx_http_lua_util.h>
 
 
 extern int ngx_ssl_ja3(ngx_connection_t *c);
