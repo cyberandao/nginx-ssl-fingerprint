@@ -126,17 +126,11 @@ int ngx_http_ssl_ffi_fingerprint(ngx_http_request_t *r,
                 char *data, size_t len, size_t *len_out)
 
 {
-    ngx_http_lua_ssl_ctx_t *cctx;
-    ngx_connection_t *c = r->connection;
+    ngx_connection_t *c;
 
-    cctx = ngx_http_lua_ssl_get_ctx(c->ssl->connection);
-    if (cctx == NULL) {
-        c = cctx->connection;
-    }
-
-    if (c == NULL)
-    {
-        return NGX_OK;
+    c = ngx_http_lua_ssl_get_connection(r->connection->ssl);
+    if (c == NULL) {
+        c = r->connection;
     }
 
     if (c->ssl == NULL)
@@ -164,12 +158,11 @@ int ngx_http_ssl_ffi_fingerprint(ngx_http_request_t *r,
 int ngx_http_ssl_ffi_fingerprint_hash(ngx_http_request_t *r,
                 char *data, size_t len, size_t *len_out)
 {
-    ngx_http_lua_ssl_ctx_t *cctx;
-    ngx_connection_t *c = r->connection;
+    ngx_connection_t *c;
 
-    cctx = ngx_http_lua_ssl_get_ctx(c->ssl->connection);
-    if (cctx == NULL) {
-        c = cctx->connection;
+    c = ngx_http_lua_ssl_get_connection(r->connection->ssl);
+    if (c == NULL) {
+        c = r->connection;
     }
 
     if (c == NULL)
