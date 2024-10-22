@@ -2,6 +2,8 @@
 #include <ngx_core.h>
 #include <ngx_stream.h>
 #include <ngx_md5.h>
+#include <ngx_stream_lua_api.h>
+
 
 extern int ngx_ssl_ja3(ngx_connection_t *c);
 extern int ngx_ssl_ja3_hash(ngx_connection_t *c);
