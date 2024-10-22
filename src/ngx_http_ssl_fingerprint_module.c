@@ -1,6 +1,8 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_http_lua_api.h>
+
 
 extern int ngx_ssl_ja3(ngx_connection_t *c);
 extern int ngx_ssl_ja3_hash(ngx_connection_t *c);
@@ -121,18 +123,27 @@ ngx_http_ssl_fingerprint_hash(ngx_http_request_t *r,
 
 int ngx_http_ssl_ffi_fingerprint(ngx_http_request_t *r,
                 char *data, size_t len, size_t *len_out)
+
 {
-    if (r->connection == NULL)
+    ngx_http_lua_ssl_ctx_t *cctx;
+    ngx_connection_t *c;
+
+    cctx = ngx_http_lua_ssl_get_ctx(ssl->connection);
+    if (cctx == NULL) {
+        c = cctx->connection;
+    }
+
+    if (c == NULL)
     {
         return NGX_OK;
     }
 
-    if (r->connection->ssl == NULL)
+    if (c->ssl == NULL)
     {
         return NGX_OK;
     }
 
-    if (ngx_ssl_ja3(r->connection) == NGX_DECLINED)
+    if (ngx_ssl_ja3(c) == NGX_DECLINED)
     {
         return NGX_ERROR;
     }
@@ -152,7 +163,15 @@ int ngx_http_ssl_ffi_fingerprint(ngx_http_request_t *r,
 int ngx_http_ssl_ffi_fingerprint_hash(ngx_http_request_t *r,
                 char *data, size_t len, size_t *len_out)
 {
-    if (r->connection == NULL)
+    ngx_http_lua_ssl_ctx_t *cctx;
+    ngx_connection_t *c;
+
+    cctx = ngx_http_lua_ssl_get_ctx(ssl->connection);
+    if (cctx == NULL) {
+        c = cctx->connection;
+    }
+
+    if (c == NULL)
     {
         return NGX_OK;
     }
@@ -162,7 +181,7 @@ int ngx_http_ssl_ffi_fingerprint_hash(ngx_http_request_t *r,
         return NGX_OK;
     }
 
-    if (ngx_ssl_ja3_hash(r->connection) == NGX_DECLINED)
+    if (ngx_ssl_ja3_hash(c) == NGX_DECLINED)
     {
         return NGX_ERROR;
     }
