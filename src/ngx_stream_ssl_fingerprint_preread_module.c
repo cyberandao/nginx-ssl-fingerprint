@@ -144,13 +144,12 @@ int ngx_stream_ssl_ffi_fingerprint(ngx_stream_lua_request_t *r,
         return NGX_ERROR;
     }
 
-    if (len <= r->connection->ssl->fp_ja3_str.len)
+    if (len < r->connection->ssl->fp_ja3_str.len)
     {
         return NGX_ERROR;
     }
 
     ngx_memcpy(data, r->connection->ssl->fp_ja3_str.data, r->connection->ssl->fp_ja3_str.len);
-    data[r->connection->ssl->fp_ja3_str.len] = '\0';
     *len_out = r->connection->ssl->fp_ja3_str.len;
 
     return NGX_OK;
@@ -181,13 +180,12 @@ int ngx_stream_ssl_ffi_fingerprint_hash(ngx_stream_lua_request_t *r,
         return NGX_ERROR;
     }
 
-    if (len <= r->connection->ssl->fp_ja3_hash.len)
+    if (len < r->connection->ssl->fp_ja3_hash.len)
     {
         return NGX_ERROR;
     }
 
     ngx_memcpy(data, r->connection->ssl->fp_ja3_hash.data, r->connection->ssl->fp_ja3_hash.len);
-    data[r->connection->ssl->fp_ja3_hash.len] = '\0';
     *len_out = r->connection->ssl->fp_ja3_hash.len;
 
     return NGX_OK;
