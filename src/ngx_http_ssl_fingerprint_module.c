@@ -101,7 +101,7 @@ ngx_http_ssl_fingerprint_hash(ngx_http_request_t *r,
     {
         return NGX_OK;
     }
-
+    
     if (r->connection->ssl == NULL)
     {
         return NGX_OK;
@@ -127,6 +127,11 @@ int ngx_http_ssl_ffi_fingerprint(ngx_http_request_t *r,
 {
     ngx_connection_t *c;
 
+    if (r->connection->ssl == NULL)
+    {
+        return NGX_OK;
+    }
+    
     c = ngx_http_lua_ssl_get_connection(r->connection->ssl);
     if (c == NULL) {
         c = r->connection;
@@ -158,6 +163,11 @@ int ngx_http_ssl_ffi_fingerprint_hash(ngx_http_request_t *r,
 {
     ngx_connection_t *c;
 
+    if (r->connection->ssl == NULL)
+    {
+        return NGX_OK;
+    }
+    
     c = ngx_http_lua_ssl_get_connection(r->connection->ssl);
     if (c == NULL) {
         c = r->connection;
